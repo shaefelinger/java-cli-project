@@ -3,7 +3,9 @@ package de.functionfactory.user;
 import java.util.UUID;
 
 public class UserService {
-    private final UserDAO userDao = new UserDAO();
+//    private final UserDAO userDao = new UserDAO();
+//    private final UserDAO userDao = new UserArrayDataAccessService();
+    private final UserDAO userDao = new userFileDataAccessService();
 
     public User[] getUsers() {
         return userDao.getUsers();
