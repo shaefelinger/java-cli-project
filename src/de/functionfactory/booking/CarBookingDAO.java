@@ -1,18 +1,12 @@
 package de.functionfactory.booking;
 
-import de.functionfactory.car.Car;
-import de.functionfactory.car.CarService;
-import de.functionfactory.user.UserService;
+import de.functionfactory.user.UserFileDataAccessService;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 public class CarBookingDAO {
     public static final CarBooking[] carBookings;
 
     static {
-        CarService carService = new CarService();
-        UserService userService = new UserService();
         carBookings = new CarBooking[10];
     }
 

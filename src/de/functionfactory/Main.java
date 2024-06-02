@@ -1,48 +1,59 @@
 package de.functionfactory;
 
 import de.functionfactory.booking.CarBooking;
+import de.functionfactory.booking.CarBookingDAO;
 import de.functionfactory.booking.CarBookingService;
 import de.functionfactory.car.Car;
+import de.functionfactory.car.CarDAO;
 import de.functionfactory.car.CarService;
 import de.functionfactory.user.User;
+import de.functionfactory.user.UserDAO;
 import de.functionfactory.user.UserService;
+import de.functionfactory.user.UserFileDataAccessService;
 
 import java.util.Scanner;
 import java.util.UUID;
 
 public class Main {
     public static void main(String[] args) {
+        UserDAO userDao = new UserFileDataAccessService();
 
-        UserService userService = new UserService();
-        CarService carService = new CarService();
+        CarDAO carDAO = new CarDAO();
+        UserService userService = new UserService(userDao);
+        CarService carService = new CarService(carDAO);
+
+        CarBookingDAO carBookingDAO = new CarBookingDAO();
+        CarBookingService carBookingService = new CarBookingService(carBookingDAO, carService);
+
+        Scanner scanner = new Scanner(System.in);
+
         System.out.println("MCBS - Mega Car Booking System");
 
         boolean keepOnLooping = true;
 
         while (keepOnLooping) {
             displayMenu();
-            Scanner scanner = new Scanner(System.in);
-            String selection = scanner.next();
+            String selection = scanner.nextLine();
 
 //            System.out.println("You selected " + selection);
 
             switch (selection) {
                 case "1" -> {
-                    displayAllUsers(userService);
-                    displayAvailableCars(false);
-                    bookCar();
+//                    displayAllUsers(userService);
+//                    displayAvailableCars(false, carBookingService);
+                    bookCar(carBookingService, userService, scanner);
                 }
 
-                case "2" -> displayAllUserBookedCars();
+                case "2" -> displayAllUserBookedCars(userService, carBookingService, scanner);
 
-                case "3" -> viewAllBookings();
+                case "3" -> viewAllBookings(carBookingService);
 
                 case "4" -> {
-                    displayAvailableCars(false);
+                    displayAvailableCars(false, carBookingService);
                 }
 
                 case "5" -> {
-                    displayAvailableCars(true);
+                    displayAvailableCars(true, carBookingService);
                 }
                 case "6" -> {
                     displayAllUsers(userService);
@@ -68,20 +79,27 @@ public class Main {
         }
     }
 
-    private static void bookCar() {
-        Scanner scanner = new Scanner(System.in);
-        CarBookingService carBookingService = new CarBookingService();
-        UserService userService = new UserService();
+    private static void bookCar(CarBookingService carBookingService, UserService userService, Scanner scanner) {
 
-        System.out.println("User-Id? ");
-        UUID userId = UUID.fromString(scanner.nextLine());
+//        System.out.println("User-Id? ");
+//        String userId = scanner.nextLine();
+//
+//
+//        System.out.println("regId-Id? ");
+//        String regId = scanner.nextLine();
 
+        displayAvailableCars(false, carBookingService);
 
-        System.out.println("regId-Id? ");
+        System.out.println("➡️ select car reg number");
         String regId = scanner.nextLine();
 
+        displayAllUsers(userService);
+
+        System.out.println("➡️ select user id");
+        String userId = scanner.nextLine();
+
         try {
-            User user = userService.getUserById(userId);
+            User user = userService.getUserById(UUID.fromString(userId));
             if (user == null) {
                 System.out.println("❌ No user found with id " + userId);
             } else {
@@ -98,11 +116,12 @@ public class Main {
         }
     }
 
-    private static void displayAllUserBookedCars() {
-        UserService userService = new UserService();
-        CarBookingService carBookingService = new CarBookingService();
+    private static void displayAllUserBookedCars(UserService userService, CarBookingService carBookingService, Scanner scanner) {
+//        UserFileDataAccessService userFileDataAccessService = new UserFileDataAccessService();
+//        UserService userService = new UserService(userFileDataAccessService);
+//        CarBookingService carBookingService = new CarBookingService();
 
-        Scanner scanner = new Scanner(System.in);
+//        Scanner scanner = new Scanner(System.in);
 
         displayAllUsers(userService);
 
@@ -128,8 +147,8 @@ public class Main {
         }
     }
 
-    private static void displayAvailableCars(boolean isElectric) {
-        CarBookingService carBookingService = new CarBookingService();
+    private static void displayAvailableCars(boolean isElectric, CarBookingService carBookingService) {
+//        CarBookingService carBookingService = new CarBookingService();
         Car[] availableCars = isElectric ? carBookingService.getAvailableElectricCars() : carBookingService.getAvailableCars();
 
         if (availableCars.length == 0) {
@@ -142,8 +161,8 @@ public class Main {
         }
     }
 
-    private static void viewAllBookings() {
-        CarBookingService carBookingService = new CarBookingService();
+    private static void viewAllBookings(CarBookingService carBookingService) {
+//        CarBookingService carBookingService = new CarBookingService();
         CarBooking[] allCarBookings = carBookingService.getBookings();
 
         if (allCarBookings.length == 0) {

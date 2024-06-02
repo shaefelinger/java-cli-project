@@ -2,11 +2,10 @@ package de.functionfactory.user;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.Scanner;
 import java.util.UUID;
 
-public class userFileDataAccessService implements UserDAO {
+public class UserFileDataAccessService implements UserDAO {
 //    private static final User[] users;
 
 //    static {
@@ -53,11 +52,12 @@ public class userFileDataAccessService implements UserDAO {
         try {
             scanner = new Scanner(file);
             while (scanner.hasNext()) {
-                System.out.println(scanner.nextLine());
+                scanner.nextLine();
+//                System.out.println(scanner.nextLine());
                 fileLength++;
             }
             scanner.close();
-            System.out.println(fileLength);
+//            System.out.println(fileLength);
 
             User[] usersFromFile = new User[fileLength];
 
