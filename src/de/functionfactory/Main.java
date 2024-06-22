@@ -11,6 +11,7 @@ import de.functionfactory.user.UserDAO;
 import de.functionfactory.user.UserService;
 import de.functionfactory.user.UserFileDataAccessService;
 
+import java.util.List;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -35,12 +36,8 @@ public class Main {
             displayMenu();
             String selection = scanner.nextLine();
 
-//            System.out.println("You selected " + selection);
-
             switch (selection) {
                 case "1" -> {
-//                    displayAllUsers(userService);
-//                    displayAvailableCars(false, carBookingService);
                     bookCar(carBookingService, userService, scanner);
                 }
 
@@ -68,9 +65,9 @@ public class Main {
     }
 
     private static void displayAllUsers(UserService userService) {
-        User[] users = userService.getUsers();
+        List<User> users = userService.getUsers();
 
-        if (users.length == 0) {
+        if (users.isEmpty()) {
             System.out.println("No Users in the system");
         }
 
@@ -80,13 +77,6 @@ public class Main {
     }
 
     private static void bookCar(CarBookingService carBookingService, UserService userService, Scanner scanner) {
-
-//        System.out.println("User-Id? ");
-//        String userId = scanner.nextLine();
-//
-//
-//        System.out.println("regId-Id? ");
-//        String regId = scanner.nextLine();
 
         displayAvailableCars(false, carBookingService);
 
@@ -117,11 +107,6 @@ public class Main {
     }
 
     private static void displayAllUserBookedCars(UserService userService, CarBookingService carBookingService, Scanner scanner) {
-//        UserFileDataAccessService userFileDataAccessService = new UserFileDataAccessService();
-//        UserService userService = new UserService(userFileDataAccessService);
-//        CarBookingService carBookingService = new CarBookingService();
-
-//        Scanner scanner = new Scanner(System.in);
 
         displayAllUsers(userService);
 
@@ -135,9 +120,9 @@ public class Main {
             return;
         }
 
-        Car[] userBookedCars = carBookingService.getUserBookedCars(UUID.fromString(userId));
+        List<Car> userBookedCars = carBookingService.getUserBookedCars(UUID.fromString(userId));
 
-        if (userBookedCars.length == 0) {
+        if (userBookedCars.isEmpty()) {
             System.out.printf("❌ user %s has no cars booked", user);
             return;
         }
@@ -148,10 +133,9 @@ public class Main {
     }
 
     private static void displayAvailableCars(boolean isElectric, CarBookingService carBookingService) {
-//        CarBookingService carBookingService = new CarBookingService();
-        Car[] availableCars = isElectric ? carBookingService.getAvailableElectricCars() : carBookingService.getAvailableCars();
+        List<Car> availableCars = isElectric ? carBookingService.getAvailableElectricCars() : carBookingService.getAvailableCars();
 
-        if (availableCars.length == 0) {
+        if (availableCars.isEmpty()) {
             System.out.println("No Available Cars for renting");
             return;
         }
@@ -162,10 +146,9 @@ public class Main {
     }
 
     private static void viewAllBookings(CarBookingService carBookingService) {
-//        CarBookingService carBookingService = new CarBookingService();
-        CarBooking[] allCarBookings = carBookingService.getBookings();
+        List<CarBooking> allCarBookings = carBookingService.getBookings();
 
-        if (allCarBookings.length == 0) {
+        if (allCarBookings.isEmpty()) {
             System.out.println("No bookings yet");
         }
 

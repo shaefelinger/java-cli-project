@@ -1,5 +1,7 @@
 package de.functionfactory.user;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class UserArrayDataAccessService implements UserDAO {
@@ -13,7 +15,7 @@ public class UserArrayDataAccessService implements UserDAO {
     }
 
     @Override
-    public User[] getUsers() {
-        return users;
+    public List<User> getUsers() {
+        return Arrays.asList(users) ;
     }
 }

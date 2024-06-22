@@ -1,17 +1,16 @@
 package de.functionfactory.user;
 
+import java.util.List;
 import java.util.UUID;
 
 public class UserService {
-//    private final UserDAO userDao = new UserDAO();
-//    private final UserDAO userDao = new UserArrayDataAccessService();
     private final UserDAO userDao;
 
     public UserService(UserDAO userDao) {
         this.userDao = userDao;
     }
 
-    public User[] getUsers() {
+    public List<User> getUsers() {
         return userDao.getUsers();
     }
 

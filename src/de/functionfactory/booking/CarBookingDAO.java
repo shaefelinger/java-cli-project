@@ -1,42 +1,21 @@
 package de.functionfactory.booking;
 
-import de.functionfactory.user.UserFileDataAccessService;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class CarBookingDAO {
-    public static final CarBooking[] carBookings;
+    public static final List<CarBooking> carBookings;
 
     static {
-        carBookings = new CarBooking[10];
+        carBookings = new ArrayList<CarBooking>();
     }
 
-    public CarBooking[] getCarBookings() {
+    public List<CarBooking> getCarBookings() {
         return carBookings;
     }
 
     public void book(CarBooking carBooking) {
-        int nextFreeIndex = -1;
-
-        for (int i = 0; i < carBookings.length; i++) {
-            if (carBookings[i] == null) {
-                nextFreeIndex = i;
-                break;
-            }
-        }
-
-        if (nextFreeIndex > -1) {
-            carBookings[nextFreeIndex] = carBooking;
-            return;
-        }
-
-        CarBooking[] biggerBookingsArray = new CarBooking[carBookings.length + 10];
-
-        for (int i = 0; i < carBookings.length; i++) {
-            biggerBookingsArray[i] = carBookings[i];
-        }
-
-        biggerBookingsArray[carBookings.length] = carBooking;
+        carBookings.add(carBooking);
     }
-
-
 }

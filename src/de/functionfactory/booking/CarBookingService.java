@@ -5,6 +5,9 @@ import de.functionfactory.car.CarService;
 import de.functionfactory.user.User;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 public class CarBookingService {
@@ -17,9 +20,9 @@ public class CarBookingService {
     }
 
     public UUID bookCar(User user, String regNumber) {
-        Car[] availableCars = getAvailableCars();
+        List<Car> availableCars = getAvailableCars();
 
-        if (availableCars.length == 0) {
+        if (availableCars.isEmpty()) {
             throw new IllegalStateException("No car available ");
         }
 
@@ -40,69 +43,39 @@ public class CarBookingService {
         throw new IllegalStateException("car with reg-nr " + regNumber + " is already booked");
     }
 
-    public Car[] getUserBookedCars(UUID userId) {
-        CarBooking[] carBookings = carBookingDAO.getCarBookings();
+    public List<Car> getUserBookedCars(UUID userId) {
+        List<CarBooking> carBookings = carBookingDAO.getCarBookings();
 
-        int numberOfBookingsForUser = 0;
-
-        for (CarBooking booking : carBookings) {
-            if (booking != null && booking.getUser().getUuid().equals(userId)) {
-                numberOfBookingsForUser++;
-            }
-        }
-
-        if (numberOfBookingsForUser == 0) {
-            return new Car[0];
-        }
-
-        Car[] userCars = new Car[numberOfBookingsForUser];
-
-        int index = 0;
+        List<Car> userCars = new ArrayList<>();
 
         for (CarBooking carBooking : carBookings) {
             if (carBooking != null && carBooking.getUser().getUuid().equals(userId)) {
-                userCars[index++] = carBooking.getCar();
+                userCars.add(carBooking.getCar());
             }
         }
         return userCars;
     }
 
-    public Car[] getAvailableCars() {
+    public List<Car> getAvailableCars() {
         return getCars(carService.getAllCars());
     }
 
-    public Car[] getAvailableElectricCars() {
+    public List<Car> getAvailableElectricCars() {
         return getCars(carService.getAllElectricCars());
     }
 
-    private Car[] getCars(Car[] cars) {
-        if (cars.length == 0) {
-            return new Car[0];
+    private List<Car> getCars(List<Car> cars) {
+        if (cars.isEmpty()) {
+            return Collections.emptyList();
         }
 
-        CarBooking[] carBookings = carBookingDAO.getCarBookings();
+        List<CarBooking> carBookings = carBookingDAO.getCarBookings();
 
-        if (carBookings.length == 0) {
+        if (carBookings.isEmpty()) {
             return cars;
         }
 
-        int availableCarsCount = 0;
-
-        for (Car car : cars) {
-            boolean booked = false;
-            for (CarBooking carBooking : carBookings) {
-                if (carBooking == null || !carBooking.getCar().equals(car)) {
-                    continue;
-                }
-                booked = true;
-            }
-            if(!booked) {
-                ++availableCarsCount;
-            }
-        }
-
-        Car[] availableCars = new Car[availableCarsCount];
-        int index = 0;
+        List<Car> availableCars = new ArrayList<>();
 
         // populate available cars
         for (Car car : cars) {
@@ -114,29 +87,20 @@ public class CarBookingService {
                 booked = true;
             }
             if(!booked) {
-                availableCars[index++] = car;
+                availableCars.add(car);
             }
         }
         return availableCars;
     }
 
-    public CarBooking[] getBookings() {
-        CarBooking[] carBookings = carBookingDAO.getCarBookings();
+    public List<CarBooking> getBookings() {
+        List<CarBooking> carBookings = carBookingDAO.getCarBookings();
 
-        int numberOfBookings = 0;
+        List<CarBooking> bookings = new ArrayList<>();
 
-        for (CarBooking booking : carBookings) {
-            if (booking != null) {
-                ++numberOfBookings;
-            }
-        }
-
-        CarBooking[] bookings = new CarBooking[numberOfBookings];
-
-        int index = 0;
         for (CarBooking bk : carBookings) {
             if (bk != null) {
-                bookings[index++] = bk;
+                bookings.add(bk);
             }
         }
 
